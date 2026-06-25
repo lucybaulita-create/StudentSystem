@@ -1,0 +1,75 @@
+<div class="verification-container">
+  <div class="verification-card">
+    <div class="verification-icon">✓</div>
+    <h1>Verify Your Email</h1>
+    <p class="subtitle">We've sent a verification code to</p>
+    <p class="email-display">{{ email() }}</p>
+
+    @if (successMessage()) {
+      <div class="success-message" role="status" aria-live="polite">
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="error-message" role="alert" aria-live="assertive">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form [formGroup]="verificationForm" (ngSubmit)="onSubmit()" class="verification-form">
+      <div class="form-group">
+        <label for="code">Enter Verification Code</label>
+        <input
+          id="code"
+          type="text"
+          inputmode="numeric"
+          maxlength="6"
+          formControlName="code"
+          placeholder="000000"
+          class="code-input"
+          [attr.aria-invalid]="verificationForm.get('code')?.invalid && verificationForm.get('code')?.touched"
+          [attr.aria-describedby]="verificationForm.get('code')?.invalid ? 'code-error' : null"
+        />
+        @if (verificationForm.get('code')?.invalid && verificationForm.get('code')?.touched) {
+          <span id="code-error" class="error-text">
+            {{ getCodeError() }}
+          </span>
+        }
+      </div>
+
+      <button
+        type="submit"
+        class="verify-btn"
+        [disabled]="isSubmitting() || verificationForm.invalid"
+      >
+        @if (isSubmitting()) {
+          <span class="spinner"></span>
+          Verifying...
+        } @else {
+          Verify Email
+        }
+      </button>
+    </form>
+
+    <div class="resend-section">
+      <p>Didn't receive the code?</p>
+      <button
+        type="button"
+        class="resend-btn"
+        (click)="resendCode()"
+        [disabled]="isSubmitting() || resendCountdown() > 0"
+      >
+        @if (resendCountdown() > 0) {
+          Resend in {{ resendCountdown() }}s
+        } @else {
+          Resend Code
+        }
+      </button>
+    </div>
+
+    <div class="back-to-login">
+      <p>Already verified? <a routerLink="/login">Back to Login</a></p>
+    </div>
+  </div>
+</div>

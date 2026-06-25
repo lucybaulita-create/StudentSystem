@@ -1,0 +1,78 @@
+<div class="manage-students">
+  <div class="page-header">
+    <h2>Manage Students</h2>
+    <button class="add-btn">➕ Enroll New Student</button>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search by name or email..."
+        (input)="onSearchChange($any($event))"
+        class="search-input"
+      />
+    </div>
+
+    <select (change)="onStatusChange($any($event))" class="filter-select">
+      <option value="all">All Status</option>
+      <option value="active">Active</option>
+      <option value="graduated">Graduated</option>
+      <option value="dropout">Dropout</option>
+    </select>
+  </div>
+
+  <div class="table-container">
+    <table class="students-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Enrolled</th>
+          <th>Completed</th>
+          <th>Progress</th>
+          <th>Status</th>
+          <th>Enroll Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (filteredStudents().length > 0) {
+          @for (student of filteredStudents(); track student.id) {
+            <tr>
+              <td>{{ student.name }}</td>
+              <td>{{ student.email }}</td>
+              <td class="text-center">{{ student.enrolledCourses }}</td>
+              <td class="text-center">{{ student.completedCourses }}</td>
+              <td>
+                <div class="progress-bar">
+                  <div 
+                    class="progress-fill" 
+                    [class]="getProgressBarClass(student.progress)"
+                    [style.width.%]="student.progress"
+                  ></div>
+                </div>
+                <span class="progress-text">{{ student.progress }}%</span>
+              </td>
+              <td>
+                <span class="badge" [class]="getStatusClass(student.status)">
+                  {{ student.status | uppercase }}
+                </span>
+              </td>
+              <td>{{ student.enrollDate }}</td>
+              <td class="actions-cell">
+                <button (click)="viewProgress(student)" class="action-btn view-btn" title="View Progress">📊</button>
+                <button (click)="editStudent(student)" class="action-btn edit-btn" title="Edit">✏️</button>
+                <button (click)="deleteStudent(student.id)" class="action-btn delete-btn" title="Delete">🗑️</button>
+              </td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="8" class="no-data">No students found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

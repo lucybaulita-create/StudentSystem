@@ -1,0 +1,136 @@
+<div class="login-container">
+  <div class="login-card">
+    @if (!showOTPInput()) {
+      <!-- Login Form -->
+      <h1>Login</h1>
+      <p class="subtitle">Welcome back</p>
+
+      @if (successMessage()) {
+        <div class="success-message" role="status" aria-live="polite">
+          {{ successMessage() }}
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="error-message" role="alert" aria-live="assertive">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="Enter your email"
+            [attr.aria-invalid]="loginForm.get('email')?.invalid && loginForm.get('email')?.touched"
+            [attr.aria-describedby]="loginForm.get('email')?.invalid ? 'email-error' : null"
+          />
+          @if (loginForm.get('email')?.invalid && loginForm.get('email')?.touched) {
+            <span id="email-error" class="error-text">{{ getEmailError() }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="password-input-wrapper">
+            <input
+              id="password"
+              [type]="hidePassword() ? 'password' : 'text'"
+              formControlName="password"
+              placeholder="Enter your password"
+              [attr.aria-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+              [attr.aria-describedby]="loginForm.get('password')?.invalid ? 'password-error' : null"
+            />
+            <button
+              type="button"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="hidePassword() ? 'Show password' : 'Hide password'"
+              class="toggle-password"
+            >
+              {{ hidePassword() ? '👁️' : '👁️‍🗨️' }}
+            </button>
+          </div>
+          @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+            <span id="password-error" class="error-text">{{ getPasswordError() }}</span>
+          }
+        </div>
+
+        <div class="form-group checkbox">
+          <input
+            id="rememberMe"
+            type="checkbox"
+            formControlName="rememberMe"
+          />
+          <label for="rememberMe">Remember me</label>
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="isSubmitting()"
+          class="submit-button"
+          [attr.aria-busy]="isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Logging in...' : 'Login' }}
+        </button>
+      </form>
+
+      <div class="footer-links">
+        <a href="#">Forgot password?</a>
+        <a [routerLink]="['/signup']">Create account</a>
+      </div>
+    } @else {
+      <!-- OTP Verification Form -->
+      <h1>Verify Your Identity</h1>
+      <p class="subtitle">Enter the 6-digit code sent to {{ otpEmail() }}</p>
+
+      @if (successMessage()) {
+        <div class="success-message" role="status" aria-live="polite">
+          {{ successMessage() }}
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="error-message" role="alert" aria-live="assertive">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <form [formGroup]="otpForm" (ngSubmit)="onOTPSubmit()" class="login-form">
+        <div class="form-group">
+          <label for="otp">One-Time Password (OTP)</label>
+          <input
+            id="otp"
+            type="text"
+            formControlName="otp"
+            placeholder="Enter 6-digit code"
+            maxlength="6"
+            inputmode="numeric"
+            [attr.aria-invalid]="otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched"
+            [attr.aria-describedby]="otpForm.get('otp')?.invalid ? 'otp-error' : null"
+          />
+          @if (otpForm.get('otp')?.invalid && otpForm.get('otp')?.touched) {
+            <span id="otp-error" class="error-text">{{ getOTPError() }}</span>
+          }
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="isSubmitting()"
+          class="submit-button"
+          [attr.aria-busy]="isSubmitting()"
+        >
+          {{ isSubmitting() ? 'Verifying...' : 'Verify OTP' }}
+        </button>
+      </form>
+
+      <div class="footer-links">
+        <button type="button" (click)="backToLogin()" class="back-button">
+          Back to Login
+        </button>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,40 @@
+<div class="student-container">
+  <aside class="sidebar" [class.collapsed]="!sidebarOpen()">
+    <div class="sidebar-header">
+      <h2>Student Panel</h2>
+      <button (click)="toggleSidebar()" class="toggle-btn" [attr.aria-label]="sidebarOpen() ? 'Collapse sidebar' : 'Expand sidebar'">
+        {{ sidebarOpen() ? '✕' : '☰' }}
+      </button>
+    </div>
+
+    <nav class="sidebar-nav">
+      @for (item of menuItems; track item.route) {
+        <a 
+          [routerLink]="item.route" 
+          routerLinkActive="active"
+          class="nav-item"
+          [attr.aria-label]="item.label"
+        >
+          <span class="icon">{{ item.icon }}</span>
+          @if (sidebarOpen()) {
+            <span class="label">{{ item.label }}</span>
+          }
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <main class="main-content">
+    <header class="top-bar">
+      <h1>Student Portal</h1>
+      <div class="user-section">
+        <span>Student User</span>
+        <button class="logout-btn">🚪 Logout</button>
+      </div>
+    </header>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
+</div>

@@ -1,0 +1,202 @@
+<div class="admin-signup-container">
+  <div class="admin-signup-card">
+    <div class="header">
+      <h1>Admin Registration</h1>
+      <p class="subtitle">Create a new admin or registrar account</p>
+    </div>
+
+    <!-- Success Message -->
+    @if (successMessage()) {
+      <div class="alert alert-success" role="alert">
+        <span class="alert-icon">✓</span>
+        {{ successMessage() }}
+      </div>
+    }
+
+    <!-- Error Message -->
+    @if (errorMessage()) {
+      <div class="alert alert-error" role="alert">
+        <span class="alert-icon">⚠</span>
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <!-- Admin Signup Form -->
+    <form [formGroup]="adminSignupForm" (ngSubmit)="onSubmit()" class="form">
+      <!-- First Name -->
+      <div class="form-group">
+        <label for="firstName">First Name *</label>
+        <input
+          type="text"
+          id="firstName"
+          formControlName="firstName"
+          placeholder="John"
+          class="form-control"
+        />
+        @if (adminSignupForm.get('firstName')?.hasError('required') && adminSignupForm.get('firstName')?.touched) {
+          <span class="error-text">First name is required</span>
+        }
+        @if (adminSignupForm.get('firstName')?.hasError('minlength') && adminSignupForm.get('firstName')?.touched) {
+          <span class="error-text">First name must be at least 2 characters</span>
+        }
+      </div>
+
+      <!-- Last Name -->
+      <div class="form-group">
+        <label for="lastName">Last Name *</label>
+        <input
+          type="text"
+          id="lastName"
+          formControlName="lastName"
+          placeholder="Doe"
+          class="form-control"
+        />
+        @if (adminSignupForm.get('lastName')?.hasError('required') && adminSignupForm.get('lastName')?.touched) {
+          <span class="error-text">Last name is required</span>
+        }
+        @if (adminSignupForm.get('lastName')?.hasError('minlength') && adminSignupForm.get('lastName')?.touched) {
+          <span class="error-text">Last name must be at least 2 characters</span>
+        }
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email *</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="admin@studentsystem.com"
+          class="form-control"
+        />
+        @if (adminSignupForm.get('email')?.hasError('required') && adminSignupForm.get('email')?.touched) {
+          <span class="error-text">Email is required</span>
+        }
+        @if (adminSignupForm.get('email')?.hasError('email') && adminSignupForm.get('email')?.touched) {
+          <span class="error-text">Please enter a valid email</span>
+        }
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password *</label>
+        <div class="password-input-group">
+          <input
+            [type]="hidePassword() ? 'password' : 'text'"
+            id="password"
+            formControlName="password"
+            placeholder="At least 8 characters"
+            class="form-control"
+          />
+          <button
+            type="button"
+            class="toggle-btn"
+            (click)="togglePasswordVisibility()"
+            tabindex="-1"
+          >
+            {{ hidePassword() ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        @if (adminSignupForm.get('password')?.hasError('required') && adminSignupForm.get('password')?.touched) {
+          <span class="error-text">Password is required</span>
+        }
+        @if (adminSignupForm.get('password')?.hasError('minlength') && adminSignupForm.get('password')?.touched) {
+          <span class="error-text">Password must be at least 8 characters</span>
+        }
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password *</label>
+        <div class="password-input-group">
+          <input
+            [type]="hideConfirmPassword() ? 'password' : 'text'"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Re-enter your password"
+            class="form-control"
+          />
+          <button
+            type="button"
+            class="toggle-btn"
+            (click)="toggleConfirmPasswordVisibility()"
+            tabindex="-1"
+          >
+            {{ hideConfirmPassword() ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        @if (adminSignupForm.get('confirmPassword')?.hasError('required') && adminSignupForm.get('confirmPassword')?.touched) {
+          <span class="error-text">Please confirm your password</span>
+        }
+        @if (adminSignupForm.hasError('passwordMismatch') && adminSignupForm.get('confirmPassword')?.touched) {
+          <span class="error-text">Passwords do not match</span>
+        }
+      </div>
+
+      <!-- Role Selection -->
+      <div class="form-group">
+        <label for="role">Role *</label>
+        <select id="role" formControlName="role" class="form-control">
+          @for (r of roles; track r) {
+            <option [value]="r">{{ r | uppercase }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Admin Secret Key -->
+      <div class="form-group">
+        <label for="adminSecret">Admin Secret Key *</label>
+        <input
+          type="password"
+          id="adminSecret"
+          formControlName="adminSecret"
+          placeholder="Enter admin secret key"
+          class="form-control"
+        />
+        <small class="help-text">Required to create admin accounts. Contact the system administrator.</small>
+        @if (adminSignupForm.get('adminSecret')?.hasError('required') && adminSignupForm.get('adminSecret')?.touched) {
+          <span class="error-text">Admin secret key is required</span>
+        }
+        @if (adminSignupForm.get('adminSecret')?.hasError('minlength') && adminSignupForm.get('adminSecret')?.touched) {
+          <span class="error-text">Admin secret key must be at least 6 characters</span>
+        }
+      </div>
+
+      <!-- Terms and Conditions -->
+      <div class="form-group checkbox-group">
+        <input
+          type="checkbox"
+          id="agreeToTerms"
+          formControlName="agreeToTerms"
+          class="form-checkbox"
+        />
+        <label for="agreeToTerms" class="checkbox-label">
+          I agree to the terms and conditions *
+        </label>
+        @if (adminSignupForm.get('agreeToTerms')?.hasError('required') && adminSignupForm.get('agreeToTerms')?.touched) {
+          <span class="error-text">You must agree to the terms and conditions</span>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="isSubmitting()"
+        aria-label="Create admin account"
+      >
+        {{ isSubmitting() ? 'Creating Account...' : 'Create Admin Account' }}
+      </button>
+    </form>
+
+    <!-- Links -->
+    <div class="footer-links">
+      <p>
+        Already have an account? <a routerLink="/login" class="link">Login here</a>
+      </p>
+      <p>
+        Looking for student registration? <a routerLink="/signup" class="link">Sign up as student</a>
+      </p>
+    </div>
+  </div>
+</div>

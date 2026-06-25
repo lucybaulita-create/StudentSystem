@@ -1,0 +1,75 @@
+<div class="manage-users">
+  <div class="page-header">
+    <h2>Manage Users</h2>
+    <button class="add-btn">➕ Add New User</button>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search by name or email..."
+        (input)="onSearchChange($any($event))"
+        class="search-input"
+      />
+    </div>
+
+    <div class="filter-group">
+      <select (change)="onRoleChange($any($event))" class="filter-select">
+        <option value="all">All Roles</option>
+        <option value="Admin">Admin</option>
+        <option value="Instructor">Instructor</option>
+        <option value="Student">Student</option>
+      </select>
+
+      <select (change)="onStatusChange($any($event))" class="filter-select">
+        <option value="all">All Status</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+        <option value="suspended">Suspended</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <table class="users-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Join Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (filteredUsers().length > 0) {
+          @for (user of filteredUsers(); track user.id) {
+            <tr>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>
+                <span class="badge badge-role">{{ user.role }}</span>
+              </td>
+              <td>
+                <span class="badge" [class]="getStatusClass(user.status)">
+                  {{ user.status | uppercase }}
+                </span>
+              </td>
+              <td>{{ user.joinDate }}</td>
+              <td class="actions-cell">
+                <button (click)="editUser(user)" class="action-btn edit-btn" title="Edit">✏️</button>
+                <button (click)="deleteUser(user.id)" class="action-btn delete-btn" title="Delete">🗑️</button>
+              </td>
+            </tr>
+          }
+        } @else {
+          <tr>
+            <td colspan="6" class="no-data">No users found</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

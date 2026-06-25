@@ -1,0 +1,153 @@
+<div class="signup-container">
+  <div class="signup-card">
+    <h1>Create Account</h1>
+    <p class="subtitle">Join us today</p>
+
+    @if (successMessage()) {
+      <div class="success-message" role="status" aria-live="polite">
+        {{ successMessage() }}
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div class="error-message" role="alert" aria-live="assertive">
+        {{ errorMessage() }}
+      </div>
+    }
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" class="signup-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="Enter your first name"
+            [attr.aria-invalid]="signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched"
+            [attr.aria-describedby]="signupForm.get('firstName')?.invalid ? 'firstName-error' : null"
+          />
+          @if (signupForm.get('firstName')?.invalid && signupForm.get('firstName')?.touched) {
+            <span id="firstName-error" class="error-text">
+              {{ getFirstNameError() }}
+            </span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="Enter your last name"
+            [attr.aria-invalid]="signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched"
+            [attr.aria-describedby]="signupForm.get('lastName')?.invalid ? 'lastName-error' : null"
+          />
+          @if (signupForm.get('lastName')?.invalid && signupForm.get('lastName')?.touched) {
+            <span id="lastName-error" class="error-text">
+              {{ getLastNameError() }}
+            </span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          [attr.aria-invalid]="signupForm.get('email')?.invalid && signupForm.get('email')?.touched"
+          [attr.aria-describedby]="signupForm.get('email')?.invalid ? 'email-error' : null"
+        />
+        @if (signupForm.get('email')?.invalid && signupForm.get('email')?.touched) {
+          <span id="email-error" class="error-text">{{ getEmailError() }}</span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input-wrapper">
+          <input
+            id="password"
+            [type]="hidePassword() ? 'password' : 'text'"
+            formControlName="password"
+            placeholder="Enter your password (min. 8 characters)"
+            [attr.aria-invalid]="signupForm.get('password')?.invalid && signupForm.get('password')?.touched"
+            [attr.aria-describedby]="signupForm.get('password')?.invalid ? 'password-error' : null"
+          />
+          <button
+            type="button"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="hidePassword() ? 'Show password' : 'Hide password'"
+            class="toggle-password"
+          >
+            {{ hidePassword() ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        @if (signupForm.get('password')?.invalid && signupForm.get('password')?.touched) {
+          <span id="password-error" class="error-text">
+            {{ getPasswordError() }}
+          </span>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="password-input-wrapper">
+          <input
+            id="confirmPassword"
+            [type]="hideConfirmPassword() ? 'password' : 'text'"
+            formControlName="confirmPassword"
+            placeholder="Confirm your password"
+            [attr.aria-invalid]="(signupForm.get('confirmPassword')?.invalid || signupForm.hasError('passwordMismatch')) && signupForm.get('confirmPassword')?.touched"
+            [attr.aria-describedby]="(signupForm.get('confirmPassword')?.invalid || signupForm.hasError('passwordMismatch')) ? 'confirmPassword-error' : null"
+          />
+          <button
+            type="button"
+            (click)="toggleConfirmPasswordVisibility()"
+            [attr.aria-label]="hideConfirmPassword() ? 'Show password' : 'Hide password'"
+            class="toggle-password"
+          >
+            {{ hideConfirmPassword() ? '👁️' : '👁️‍🗨️' }}
+          </button>
+        </div>
+        @if ((signupForm.get('confirmPassword')?.invalid || signupForm.hasError('passwordMismatch')) && signupForm.get('confirmPassword')?.touched) {
+          <span id="confirmPassword-error" class="error-text">
+            {{ getConfirmPasswordError() }}
+          </span>
+        }
+      </div>
+
+      <div class="form-group checkbox">
+        <input
+          id="agreeToTerms"
+          type="checkbox"
+          formControlName="agreeToTerms"
+        />
+        <label for="agreeToTerms">
+          I agree to the <a href="#">Terms and Conditions</a>
+        </label>
+      </div>
+      @if (signupForm.get('agreeToTerms')?.invalid && signupForm.get('agreeToTerms')?.touched) {
+        <span class="error-text">{{ getTermsError() }}</span>
+      }
+
+      <button
+        type="submit"
+        [disabled]="isSubmitting()"
+        class="submit-button"
+        [attr.aria-busy]="isSubmitting()"
+      >
+        {{ isSubmitting() ? 'Creating Account...' : 'Sign Up' }}
+      </button>
+    </form>
+
+    <div class="footer-link">
+      <span>Already have an account?</span>
+      <a [routerLink]="['/login']">Login here</a>
+    </div>
+  </div>
+</div>

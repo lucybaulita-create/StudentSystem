@@ -1,0 +1,21 @@
+FROM jenkins/jenkins:lts
+
+USER root
+
+# Install Docker CLI and Docker Compose
+RUN apt-get update && apt-get install -y \
+    docker.io \
+    docker-compose \
+    && rm -rf /var/lib/apt/lists/*
+
+# Run Jenkins as root to access Docker socket (safe in container)
+# This is necessary for Docker-in-Docker on Windows
+ENV JENKINS_USER=root
+
+# Install essential plugins
+RUN jenkins-plugin-cli --plugins \
+    pipeline-model-definition \
+    pipeline-stage-view \
+    git \
+    github \
+    docker-workflow

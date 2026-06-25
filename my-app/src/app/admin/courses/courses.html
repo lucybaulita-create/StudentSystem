@@ -1,0 +1,66 @@
+<div class="courses">
+  <div class="page-header">
+    <h2>Manage Courses</h2>
+    <button class="add-btn">➕ Create New Course</button>
+  </div>
+
+  <div class="filters-section">
+    <div class="search-box">
+      <input
+        type="text"
+        placeholder="Search by title or instructor..."
+        (input)="onSearchChange($any($event))"
+        class="search-input"
+      />
+    </div>
+
+    <select (change)="onStatusChange($any($event))" class="filter-select">
+      <option value="all">All Status</option>
+      <option value="published">Published</option>
+      <option value="draft">Draft</option>
+      <option value="archived">Archived</option>
+    </select>
+  </div>
+
+  @if (filteredCourses().length > 0) {
+    <div class="courses-grid">
+      @for (course of filteredCourses(); track course.id) {
+        <div class="course-card">
+          <div class="course-header">
+            <h3>{{ course.title }}</h3>
+            <span class="badge" [class]="getStatusClass(course.status)">
+              {{ course.status | uppercase }}
+            </span>
+          </div>
+
+          <div class="course-details">
+            <p><strong>Instructor:</strong> {{ course.instructor }}</p>
+            <p><strong>Students:</strong> {{ course.enrolledStudents }}</p>
+            <p><strong>Rating:</strong> 
+              @if (course.rating > 0) {
+                <span class="rating">{{ getRatingStars(course.rating) }} {{ course.rating }}</span>
+              } @else {
+                <span class="no-rating">No ratings yet</span>
+              }
+            </p>
+            <p><strong>Price:</strong> <span class="price">${{ course.price }}</span></p>
+            <p><strong>Created:</strong> {{ course.createdDate }}</p>
+          </div>
+
+          <div class="course-actions">
+            @if (course.status === 'draft') {
+              <button (click)="publishCourse(course)" class="action-btn publish-btn">📤 Publish</button>
+            }
+            <button (click)="viewAnalytics(course)" class="action-btn analytics-btn">📊 Analytics</button>
+            <button (click)="editCourse(course)" class="action-btn edit-btn">✏️ Edit</button>
+            <button (click)="deleteCourse(course.id)" class="action-btn delete-btn">🗑️ Delete</button>
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="no-data-container">
+      <p>No courses found</p>
+    </div>
+  }
+</div>

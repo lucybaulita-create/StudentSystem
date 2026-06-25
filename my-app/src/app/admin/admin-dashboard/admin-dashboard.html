@@ -1,0 +1,42 @@
+<div class="dashboard">
+  <h2>Dashboard Overview</h2>
+
+  <div class="stats-grid">
+    @for (stat of stats; track stat.title) {
+      <div class="stat-card" [style.border-top-color]="stat.color">
+        <div class="stat-icon">{{ stat.icon }}</div>
+        <div class="stat-content">
+          <p class="stat-title">{{ stat.title }}</p>
+          <p class="stat-value">{{ stat.value | number }}</p>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="dashboard-grid">
+    <div class="activity-section">
+      <h3>Recent Activity</h3>
+      <div class="activity-list">
+        @for (activity of recentActivity(); track activity.action) {
+          <div class="activity-item" [class]="'type-' + activity.type">
+            <span class="activity-dot"></span>
+            <div class="activity-details">
+              <p class="activity-action">{{ activity.action }}</p>
+              <p class="activity-time">{{ activity.timestamp }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="quick-actions">
+      <h3>Quick Actions</h3>
+      <div class="action-buttons">
+        <button class="action-btn">➕ Add User</button>
+        <button class="action-btn">📝 Create Course</button>
+        <button class="action-btn">🎓 Enroll Student</button>
+        <button class="action-btn">📊 View Reports</button>
+      </div>
+    </div>
+  </div>
+</div>

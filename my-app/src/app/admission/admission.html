@@ -1,0 +1,147 @@
+<div class="admission-container">
+  <h2>Student Admission</h2>
+
+  @if (successMessage()) {
+    <div class="success-message" role="status" aria-live="polite">
+      ✅ {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-message" role="alert" aria-live="assertive">
+      ❌ {{ errorMessage() }}
+    </div>
+  }
+
+  <div class="form-card">
+    <h3>Add New Student</h3>
+    <form [formGroup]="admissionForm" (ngSubmit)="onSubmit()" class="admission-form">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="firstName">First Name</label>
+          <input
+            id="firstName"
+            type="text"
+            formControlName="firstName"
+            placeholder="Enter first name"
+            [attr.aria-invalid]="admissionForm.get('firstName')?.invalid && admissionForm.get('firstName')?.touched"
+          />
+          @if (admissionForm.get('firstName')?.invalid && admissionForm.get('firstName')?.touched) {
+            <span class="error-text">{{ getFirstNameError() }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name</label>
+          <input
+            id="lastName"
+            type="text"
+            formControlName="lastName"
+            placeholder="Enter last name"
+            [attr.aria-invalid]="admissionForm.get('lastName')?.invalid && admissionForm.get('lastName')?.touched"
+          />
+          @if (admissionForm.get('lastName')?.invalid && admissionForm.get('lastName')?.touched) {
+            <span class="error-text">{{ getLastNameError() }}</span>
+          }
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="Enter email address"
+          [attr.aria-invalid]="admissionForm.get('email')?.invalid && admissionForm.get('email')?.touched"
+        />
+        @if (admissionForm.get('email')?.invalid && admissionForm.get('email')?.touched) {
+          <span class="error-text">{{ getEmailError() }}</span>
+        }
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            id="phone"
+            type="tel"
+            formControlName="phone"
+            placeholder="555-0000 or +1 555 0000"
+            [attr.aria-invalid]="admissionForm.get('phone')?.invalid && admissionForm.get('phone')?.touched"
+          />
+          @if (admissionForm.get('phone')?.invalid && admissionForm.get('phone')?.touched) {
+            <span class="error-text">{{ getPhoneError() }}</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="dateOfBirth">Date of Birth</label>
+          <input
+            id="dateOfBirth"
+            type="date"
+            formControlName="dateOfBirth"
+            [attr.aria-invalid]="admissionForm.get('dateOfBirth')?.invalid && admissionForm.get('dateOfBirth')?.touched"
+          />
+          @if (admissionForm.get('dateOfBirth')?.invalid && admissionForm.get('dateOfBirth')?.touched) {
+            <span class="error-text">{{ getDateError() }}</span>
+          }
+        </div>
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="isSubmitting()"
+        class="submit-button"
+        [attr.aria-busy]="isSubmitting()"
+      >
+        {{ isSubmitting() ? '⏳ Adding Student...' : '➕ Add Student' }}
+      </button>
+    </form>
+  </div>
+
+  <div class="students-list-card">
+    <h3>Enrolled Students ({{ students().length }})</h3>
+    
+    @if (students().length > 0) {
+      <div class="table-container">
+        <table class="students-table">
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Date of Birth</th>
+              <th>Enrollment Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (student of students(); track student.id) {
+              <tr>
+                <td>{{ student.firstName }}</td>
+                <td>{{ student.lastName }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.phone }}</td>
+                <td>{{ student.dateOfBirth }}</td>
+                <td>{{ student.enrollmentDate }}</td>
+                <td>
+                  <button
+                    (click)="deleteStudent(student.id)"
+                    class="delete-btn"
+                    title="Delete student"
+                  >
+                    🗑️
+                  </button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      <p class="no-students">No students enrolled yet</p>
+    }
+  </div>
+</div>

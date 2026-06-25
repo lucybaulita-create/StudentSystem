@@ -1,0 +1,23 @@
+.course-semester {
+  padding: 20px;
+}
+
+.course-semester-section {
+  margin-bottom: 40px;
+}
+
+.course-semester-section h1 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.subjects-grades-section {
+  margin-top: 30px;
+}
+
+.subjects-grades-section h2 {
+  color: #333;
+  margin-bottom: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}

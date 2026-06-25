@@ -1,0 +1,37 @@
+# Backend
+backend/__pycache__/
+backend/*.pyc
+backend/.env
+backend/.venv/
+backend/venv/
+backend/.pytest_cache/
+
+# Frontend
+my-app/node_modules/
+my-app/dist/
+my-app/.angular/
+my-app/.env
+my-app/.env.local
+my-app/npm-debug.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+.dockerignore
+*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+"deploy_key" 
+"deploy_key.pub" 
